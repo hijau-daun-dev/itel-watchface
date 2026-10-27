@@ -1,0 +1,252 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": false,
+   "x": 170,
+   "y": 176,
+   "w": 46,
+   "h": 24,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_weekday/00.png",
+    "e02_weekday/01.png",
+    "e02_weekday/02.png",
+    "e02_weekday/03.png",
+    "e02_weekday/04.png",
+    "e02_weekday/05.png",
+    "e02_weekday/06.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": false,
+   "x": 230,
+   "y": 178,
+   "w": 15,
+   "h": 22,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_day/00.png",
+    "e03_day/01.png",
+    "e03_day/02.png",
+    "e03_day/03.png",
+    "e03_day/04.png",
+    "e03_day/05.png",
+    "e03_day/06.png",
+    "e03_day/07.png",
+    "e03_day/08.png",
+    "e03_day/09.png"
+   ]
+  },
+  {
+   "type": "month",
+   "alpha": false,
+   "x": 267,
+   "y": 178,
+   "w": 15,
+   "h": 22,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e04_month/00.png",
+    "e04_month/01.png",
+    "e04_month/02.png",
+    "e04_month/03.png",
+    "e04_month/04.png",
+    "e04_month/05.png",
+    "e04_month/06.png",
+    "e04_month/07.png",
+    "e04_month/08.png",
+    "e04_month/09.png"
+   ]
+  },
+  {
+   "type": "hour",
+   "alpha": false,
+   "x": 68,
+   "y": 226,
+   "w": 71,
+   "h": 84,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e05_hour/00.png",
+    "e05_hour/01.png",
+    "e05_hour/02.png",
+    "e05_hour/03.png",
+    "e05_hour/04.png",
+    "e05_hour/05.png",
+    "e05_hour/06.png",
+    "e05_hour/07.png",
+    "e05_hour/08.png",
+    "e05_hour/09.png"
+   ]
+  },
+  {
+   "type": "min",
+   "alpha": false,
+   "x": 232,
+   "y": 226,
+   "w": 71,
+   "h": 84,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e06_min/00.png",
+    "e06_min/01.png",
+    "e06_min/02.png",
+    "e06_min/03.png",
+    "e06_min/04.png",
+    "e06_min/05.png",
+    "e06_min/06.png",
+    "e06_min/07.png",
+    "e06_min/08.png",
+    "e06_min/09.png"
+   ]
+  },
+  {
+   "type": "ampm",
+   "alpha": false,
+   "x": 384,
+   "y": 232,
+   "w": 20,
+   "h": 15,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e07_ampm/00.png",
+    "e07_ampm/01.png"
+   ]
+  },
+  {
+   "type": "sec",
+   "alpha": false,
+   "x": 382,
+   "y": 281,
+   "w": 25,
+   "h": 29,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e08_sec/00.png",
+    "e08_sec/01.png",
+    "e08_sec/02.png",
+    "e08_sec/03.png",
+    "e08_sec/04.png",
+    "e08_sec/05.png",
+    "e08_sec/06.png",
+    "e08_sec/07.png",
+    "e08_sec/08.png",
+    "e08_sec/09.png"
+   ]
+  },
+  {
+   "type": "battery_level",
+   "alpha": false,
+   "x": 165,
+   "y": 110,
+   "w": 140,
+   "h": 12,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e09_battery_level/00.png",
+    "e09_battery_level/01.png",
+    "e09_battery_level/02.png",
+    "e09_battery_level/03.png",
+    "e09_battery_level/04.png",
+    "e09_battery_level/05.png"
+   ]
+  },
+  {
+   "type": "step",
+   "alpha": false,
+   "x": 233,
+   "y": 372,
+   "w": 15,
+   "h": 21,
+   "gravity": 10,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e10_step/00.png",
+    "e10_step/01.png",
+    "e10_step/02.png",
+    "e10_step/03.png",
+    "e10_step/04.png",
+    "e10_step/05.png",
+    "e10_step/06.png",
+    "e10_step/07.png",
+    "e10_step/08.png",
+    "e10_step/09.png"
+   ]
+  }
+ ]
+}

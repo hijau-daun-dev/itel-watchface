@@ -1,0 +1,122 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "source_size": 472752,
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": true,
+   "x": 172,
+   "y": 314,
+   "w": 120,
+   "h": 32,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_weekday/00.png",
+    "e02_weekday/01.png",
+    "e02_weekday/02.png",
+    "e02_weekday/03.png",
+    "e02_weekday/04.png",
+    "e02_weekday/05.png",
+    "e02_weekday/06.png"
+   ]
+  },
+  {
+   "type": "needle_hour",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 16,
+   "h": 110,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 8,
+   "b19": 8,
+   "images": [
+    "e03_needle_hour/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  },
+  {
+   "type": "needle_min",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 14,
+   "h": 150,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 2,
+   "b19": 7,
+   "images": [
+    "e04_needle_min/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  },
+  {
+   "type": "needle_sec",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 16,
+   "h": 196,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 8,
+   "b19": 8,
+   "images": [
+    "e05_needle_sec/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  }
+ ]
+}

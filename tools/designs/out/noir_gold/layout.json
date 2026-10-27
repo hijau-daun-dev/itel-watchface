@@ -1,0 +1,115 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": false,
+   "x": 352,
+   "y": 218,
+   "w": 19,
+   "h": 30,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_day/00.png",
+    "e02_day/01.png",
+    "e02_day/02.png",
+    "e02_day/03.png",
+    "e02_day/04.png",
+    "e02_day/05.png",
+    "e02_day/06.png",
+    "e02_day/07.png",
+    "e02_day/08.png",
+    "e02_day/09.png"
+   ]
+  },
+  {
+   "type": "needle_hour",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 20,
+   "h": 118,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 0,
+   "b19": 10,
+   "images": [
+    "e03_needle_hour/00.png"
+   ]
+  },
+  {
+   "type": "needle_min",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 16,
+   "h": 178,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 0,
+   "b19": 8,
+   "images": [
+    "e04_needle_min/00.png"
+   ]
+  },
+  {
+   "type": "needle_sec",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 7,
+   "h": 236,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 40,
+   "b19": 3,
+   "images": [
+    "e05_needle_sec/00.png"
+   ]
+  }
+ ]
+}

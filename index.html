@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dial Loader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* Tema: instrumen horologi — panel gelap, aksen lume hijau, bezel jam = progress ring. */
+  :root {
+    --bg: #0c0e0d; --bg2: #121513; --panel: #161a18; --line: #262c29; --line2: #343c38;
+    --fg: #e8ece9; --muted: #8a948f; --lume: #9dfc6b; --lume-dim: #9dfc6b2e; --amber: #ffb547;
+    --ink: #0c0e0d;
+    --display: 'Unbounded', 'Segoe UI', sans-serif; --body: 'IBM Plex Sans', 'Segoe UI', sans-serif; --mono: 'JetBrains Mono', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+    --bg: #eeece6; --bg2: #e6e3db; --panel: #f8f7f3; --line: #d9d5ca; --line2: #c8c3b6;
+    --fg: #1a1c1b; --muted: #62665f; --lume: #2f8a12; --lume-dim: #2f8a1222; --amber: #b86e00; --ink: #f8f7f3;
+  } }
+  :root[data-theme="light"] {
+    --bg: #eeece6; --bg2: #e6e3db; --panel: #f8f7f3; --line: #d9d5ca; --line2: #c8c3b6;
+    --fg: #1a1c1b; --muted: #62665f; --lume: #2f8a12; --lume-dim: #2f8a1222; --amber: #b86e00; --ink: #f8f7f3;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 var(--body);
+    background-image: radial-gradient(1100px 480px at 75% -10%, var(--lume-dim), transparent 60%); background-attachment: fixed; }
+  button, select, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--lume); outline-offset: 2px; }
+
+  /* ---- Bar atas ---- */
+  .bar { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+    background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .brand { font: 600 15px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; }
+  .brand small { display: block; font: 400 10px/1.4 var(--mono); letter-spacing: .14em; color: var(--muted); margin-top: 4px; }
+  .bar .spacer { flex: 1; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line2); border-radius: 999px;
+    font: 12px/1.2 var(--mono); color: var(--muted); min-width: 0; max-width: 38vw; }
+  .pill #status { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .led { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  body[data-conn="wait"] .led { background: var(--amber); animation: blink 1s infinite; }
+  body[data-conn="on"] .led { background: var(--lume); box-shadow: 0 0 10px var(--lume); }
+  body[data-conn="on"] .pill { color: var(--fg); }
+  @keyframes blink { 50% { opacity: .25; } }
+
+  .btn { cursor: pointer; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line2); background: transparent; font-weight: 500; white-space: nowrap; transition: border-color .15s; }
+  .btn:hover:not(:disabled) { border-color: var(--fg); }
+  .btn.primary { background: var(--lume); border-color: var(--lume); color: var(--ink); font-weight: 600; }
+  .btn.primary:hover:not(:disabled) { border-color: var(--lume); filter: brightness(1.08); }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn:disabled.primary { display: none; }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* ---- Hero: jam bulat, bezel = progres kirim ---- */
+  .hero { display: grid; grid-template-columns: minmax(240px, 330px) 1fr; gap: 56px; align-items: center; padding: 48px 0 52px; }
+  .watch { --p: 0; position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%; padding: 7px;
+    background: conic-gradient(var(--lume) calc(var(--p) * 1turn), var(--line) 0);
+    box-shadow: 0 30px 60px -22px #000b, inset 0 0 0 1px #fff1; transition: box-shadow .4s; }
+  .watch::before { /* tanda menit di bezel */
+    content: ""; position: absolute; inset: 7px; border-radius: 50%;
+    background: repeating-conic-gradient(var(--bg2) 0 5.5deg, var(--line2) 5.5deg 6deg); }
+  .face-in { position: absolute; inset: 24px; border-radius: 50%; overflow: hidden; background: #000; display: grid; place-items: center;
+    box-shadow: 0 0 0 1px #fff2, inset 0 0 40px #000; }
+  .face-in img { width: 100%; height: 100%; object-fit: cover; }
+  .idle { font: 600 clamp(30px, 4.6vw, 46px)/1 var(--mono); color: #9dfc6b; text-align: center; }
+  .idle small { display: block; font: 400 10px/1.6 var(--mono); color: #8a948f; letter-spacing: .2em; margin-top: 8px; text-transform: uppercase; }
+  .pct { position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%); font: 600 12px/1 var(--mono); color: var(--lume); opacity: 0; transition: opacity .2s; }
+  body[data-send="on"] .pct, body[data-send="done"] .pct { opacity: 1; }
+  body[data-send="on"] .watch { animation: glow 2.4s ease-in-out infinite; }
+  body[data-send="fail"] .watch { background: conic-gradient(var(--amber) calc(var(--p) * 1turn), var(--line) 0); }
+  @keyframes glow { 50% { box-shadow: 0 30px 60px -22px #000b, 0 0 46px -8px var(--lume); } }
+
+  .hero h1 { font: 600 clamp(30px, 4.4vw, 54px)/1.04 var(--display); margin: 0 0 16px; letter-spacing: -.015em; }
+  .hero h1 em { font-style: normal; color: var(--lume); }
+  .lead { color: var(--muted); max-width: 46ch; margin: 0 0 22px; }
+  .steps { display: flex; gap: 8px 22px; flex-wrap: wrap; margin: 0 0 26px; padding: 0; list-style: none; font: 12px/1.4 var(--mono); color: var(--muted); counter-reset: s; }
+  .steps li { counter-increment: s; }
+  .steps li::before { content: "0" counter(s) "  "; color: var(--lume); }
+
+  #sendBox { border-left: 2px solid var(--lume); padding: 2px 0 4px 14px; margin-bottom: 22px; max-width: 480px; }
+  #sendLabel { font: 13px/1.5 var(--mono); margin-bottom: 10px; }
+  progress { appearance: none; -webkit-appearance: none; display: block; width: 100%; height: 4px; border: 0; border-radius: 4px; background: var(--line); overflow: hidden; }
+  progress::-webkit-progress-bar { background: var(--line); }
+  progress::-webkit-progress-value { background: var(--lume); }
+  progress::-moz-progress-bar { background: var(--lume); }
+
+  .file { position: relative; display: inline-flex; font-size: 13px; cursor: pointer; }
+  .file input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .file span { padding: 8px 15px; border: 1px dashed var(--line2); border-radius: 999px; }
+  .file:hover span { border-color: var(--fg); }
+  .file:has(input:disabled) { opacity: .4; cursor: default; }
+  .file:has(input:disabled):hover span { border-color: var(--line2); }
+  .file:has(input:focus-visible) span { outline: 2px solid var(--lume); outline-offset: 2px; }
+
+  /* ---- Katalog ---- */
+  .cat-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    border-top: 1px solid var(--line); padding-top: 28px; margin-bottom: 26px; }
+  .cat-head h2 { font: 600 24px/1 var(--display); margin: 0; }
+  .cat-head h2 span { display: block; font: 400 11px/1.6 var(--mono); color: var(--muted); letter-spacing: .06em; margin-top: 10px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  select { appearance: none; padding: 8px 34px 8px 14px; border-radius: 999px; border: 1px solid var(--line2); max-width: 100%;
+    background: var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a948f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center;
+    font-size: 13px; cursor: pointer; }
+
+  .hy-panel { border: 1px solid var(--line2); border-radius: 14px; padding: 12px 14px; margin-bottom: 18px; max-width: 480px; }
+  .hy-head { font: 12px/1.4 var(--mono); color: var(--muted); margin-bottom: 8px; }
+  .hy-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
+  .hy-grid input { width: 100%; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line2); background: var(--bg); }
+  .hy-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .hy-row .btn { padding: 6px 12px; }
+  .hy-row select { padding: 6px 30px 6px 10px; }
+  .hy-msg { font: 12px/1.4 var(--mono); color: var(--lume); margin-top: 8px; min-height: 1em; }
+  .official { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); cursor: pointer; padding: 0 6px; }
+  .official input { accent-color: var(--lume); }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 30px 20px; }
+  .face { cursor: pointer; text-align: center; border-radius: 12px; outline: none; }
+  .face img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; background: #000;
+    box-shadow: 0 0 0 4px var(--panel), 0 0 0 5px var(--line2), 0 14px 24px -16px #000; transition: transform .25s, box-shadow .25s; }
+  .face:hover img, .face:focus-visible img { transform: translateY(-4px) scale(1.03); box-shadow: 0 0 0 4px var(--panel), 0 0 0 6px var(--lume), 0 20px 30px -16px #000; }
+  .face div { margin-top: 12px; font: 11px/1.3 var(--mono); color: var(--muted); }
+  .face .pic { position: relative; display: block; }
+  .badge { position: absolute; top: 4px; right: 4px; padding: 2px 7px; border-radius: 999px; background: var(--lume); color: var(--ink);
+    font: 600 9px/1.4 var(--mono); letter-spacing: .08em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 26px; }
+  .chip { cursor: pointer; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line2); background: transparent;
+    font: 500 13px/1 var(--body); color: var(--muted); }
+  .chip span { font: 11px var(--mono); opacity: .7; margin-left: 4px; }
+  .chip:hover { border-color: var(--fg); color: var(--fg); }
+  .chip.on { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+  .chip.anim.on { background: var(--lume); border-color: var(--lume); color: var(--ink); }
+  #btnMore { margin-top: 36px; }
+
+  /* ---- Lanjutan ---- */
+  details.adv { margin-top: 56px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+  details.adv summary { cursor: pointer; padding: 15px 18px; font: 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .adv-body { padding: 0 18px 18px; }
+  .adv-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
+  .adv-row input { width: 80px; margin-left: 6px; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line2); background: var(--bg); }
+  #log { font: 12px/1.5 var(--mono); white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow: auto; background: var(--bg); border-radius: 10px; padding: 12px; color: var(--muted); }
+  #log:empty::before { content: "Belum ada log."; }
+
+  @media (max-width: 760px) {
+    .bar { padding: 10px 16px; gap: 8px; } .brand small, .pill { display: none; }
+    main { padding: 0 16px 48px; }
+    .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 30px; justify-items: center; text-align: center; }
+    .watch { max-width: 250px; }
+    .lead { margin-inline: auto; } .steps { justify-content: center; }
+    #sendBox { text-align: left; width: 100%; }
+    #grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 22px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body data-conn="off">
+<header class="bar">
+  <div class="brand">Dial Loader<small>WATCH FACE · BLUETOOTH</small></div>
+  <div class="spacer"></div>
+  <span class="pill" role="status"><span class="led"></span><span id="status">belum konek</span></span>
+  <button id="btnDisconnect" class="btn" disabled>Putus</button>
+  <button id="btnConnect" class="btn primary">Konek ke jam</button>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="watch" id="watch" aria-hidden="true">
+      <div class="face-in" id="faceIn"><div class="idle"><span id="clock">--:--</span><small id="watchName">belum ada jam</small></div></div>
+      <div class="pct" id="pct">0%</div>
+    </div>
+    <div>
+      <h1>Ganti wajah<br><em>jam tanganmu.</em></h1>
+      <p class="lead">Pilih watch face yang cocok untuk jam kamu, lalu kirim langsung lewat Bluetooth laptop. Tidak perlu app di HP.</p>
+      <ol class="steps"><li>Matikan Bluetooth HP</li><li>Konek ke jam</li><li>Klik watch face</li></ol>
+      <div id="hyPanel" class="hy-panel" style="display:none">
+        <div class="hy-head">Posisi jam Haylou · <span id="hyPanelName"></span></div>
+        <div class="hy-grid">
+          <label>Jam X<input type="number" id="hyTX"></label><label>Jam Y<input type="number" id="hyTY"></label>
+          <label>Tgl X<input type="number" id="hyDX"></label><label>Tgl Y<input type="number" id="hyDY"></label>
+        </div>
+        <div class="hy-row">
+          <select id="hyWhich"><option value="time">geser: jam</option><option value="date">geser: tanggal</option></select>
+          <button class="btn" onclick="hyNudge(-10,0)">◀</button><button class="btn" onclick="hyNudge(10,0)">▶</button>
+          <button class="btn" onclick="hyNudge(0,-10)">▲</button><button class="btn" onclick="hyNudge(0,10)">▼</button>
+          <button class="btn" onclick="hyApplyPos()">Terapkan</button>
+          <button class="btn primary" onclick="hySavePos()">Simpan untuk desain ini</button>
+        </div>
+        <div id="hyPanelMsg" class="hy-msg"></div>
+      </div>
+      <div id="sendBox" style="display:none">
+        <div id="sendLabel"></div>
+        <progress id="sendProgress" max="1" value="0"></progress>
+      </div>
+      <label class="file"><input type="file" id="fileBin" accept=".bin,.wf" disabled><span>Kirim file .bin sendiri</span></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="cat-head">
+      <h2>Katalog<span id="catInfo"></span></h2>
+      <div class="filters">
+        <select id="fSrc" aria-label="Sumber"><option value="">Semua sumber</option></select>
+        <select id="fCat" aria-label="Kategori" hidden><option value="">Semua kategori</option></select>
+        <label class="official"><input type="checkbox" id="fOfficial"> katalog resmi</label>
+      </div>
+    </div>
+    <div id="chips" class="chips" role="toolbar" aria-label="Kategori"></div>
+    <div id="grid"></div>
+    <div style="text-align:center"><button id="btnMore" class="btn" style="display:none">Tampilkan lebih banyak</button></div>
+  </section>
+
+  <details class="adv">
+    <summary>Pengaturan lanjutan &amp; log</summary>
+    <div class="adv-body">
+      <div class="adv-row">
+        <label>Potongan tulis (byte)<input type="number" id="pieceSize" value="244" min="20" max="512"></label>
+        <label>Slot<input type="number" id="slot" value="0" min="0" max="20"></label>
+        <label><input type="checkbox" id="hyPos"> Haylou: posisi jam ikut desain</label>
+        <button id="btnReload" class="btn">Muat ulang katalog</button>
+        <button id="btnCopy" class="btn">Salin log</button>
+      </div>
+      <div id="log"></div>
+    </div>
+  </details>
+</main>
+
+<script>
+const NUS = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const CH_WRITE = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+const CH_NOTIFY = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
+// Layanan yang dicoba saat diagnosa jam lain (Web Bluetooth hanya bisa membuka layanan yang didaftarkan).
+const PROBE_SERVICES = [
+  'device_information', 'battery_service', 'heart_rate', 'generic_access',
+  0xfee0, 0xfee1, 0xfee7, 0xfeea, 0xfef5, 0xfff0, 0xffe0, 0xff00, 0xfd00, 0xae00, 0xae30, 0xaf00, 0x190a, 0xfe95,
+  0x2760, 0xfdab, 0xfeec, 0xffd0, 0xfee9, 0xfeb3, 0xfdaa, 0x1802, 0x1803, 0x1804, 0x1805, 0x1814, 0x1816,
+  '0000fff0-0000-1000-8000-00805f9b34fb', '6e400001-b5a4-f393-e0a9-e50e24dcca9e',
+  '0000d0ff-3c17-d293-8e48-14fe2e4da212', 'c3e6fea0-e966-1000-8000-be99c223df6a',
+  '5833ff01-9b8b-5191-6142-22a4536ef123', '000001ff-3c17-d293-8e48-14fe2e4da212',
+  // Haylou (SDK HuaWo, chip SiFli): perintah 0x6006, transfer gambar/OTA 0x1530, lain-lain.
+  0x6006, 0x1530, 0x1630, 0xfd35, '00000000-0000-0000-6473-5f696c666973',
+];
+
+// ---------- Haylou Solar Plus (SDK HuaWo, LS16) ----------
+// Frame perintah: 6F cmd type(70=get,71=set) len(le16) payload 8F, tanpa CRC. Tulis 0x8001, balasan 0x8002.
+// Transfer gambar: kontrol 0x1531 (tulis+notify), data 0x1532.
+// PENGAMAN: tipe OTA dikunci 4 (gambar); alamat hanya dari jam (FFFFFFFF = batal); ukuran 466 & 264;
+// tidak pernah mengirim bind baru / reset.
+const HAYLOU_GETS = [
+  ['tipe jam', [0x03, 0x00]], ['firmware', [0x03, 0x07]], ['baterai', [0x08, 0x01]],
+  ['watch face aktif', [0x0F, 0x02]], ['UID bind', [0x93, 0x00]],
+];
+const hy = { ready: false, write: null, otaCtl: null, otaData: null, buf: new Uint8Array(0), wait: null, otaWait: null };
+
+function hyPrintable(b) {
+  return Array.from(b, x => (x >= 32 && x < 127 ? String.fromCharCode(x) : '.')).join('');
+}
+function hyFrame(cmd, type, payload) {
+  const f = new Uint8Array(payload.length + 6);
+  f[0] = 0x6F; f[1] = cmd; f[2] = type; f[3] = payload.length & 255; f[4] = payload.length >> 8;
+  f.set(payload, 5); f[f.length - 1] = 0x8F;
+  return f;
+}
+// Mode tulis mengikuti izin karakteristik; kalau Windows menolak satu mode, coba mode lainnya.
+async function hyWriteChar(ch, data, piece = 128, preferResponse = false) {
+  const pr = ch.properties;
+  for (let o = 0; o < data.length; o += piece) {
+    const part = data.slice(o, o + piece);
+    const order = [];
+    if (preferResponse && pr.write) order.push('wr');
+    if (pr.writeWithoutResponse) order.push('wnr');
+    if (pr.write && !order.includes('wr')) order.push('wr');
+    if (!order.length) order.push('wr', 'wnr');
+    let err;
+    for (const m of order) {
+      try {
+        if (m === 'wr') await ch.writeValueWithResponse(part); else await ch.writeValueWithoutResponse(part);
+        err = null; break;
+      } catch (e) { err = e; }
+    }
+    if (err) throw new Error(`tulis ke ${ch.uuid.slice(4, 8)} ditolak: ${err.message}`);
+  }
+}
+function hyProps(ch) {
+  return Object.entries(ch.properties).filter(([, v]) => v === true).map(([k]) => k).join(',');
+}
+// Kirim perintah lalu tunggu balasan dengan cmd yang sama (payload dikembalikan).
+function hyCmd(cmd, type, payload, timeout = 10000, label = '') {
+  return new Promise(async (resolve, reject) => {
+    const t = setTimeout(() => { hy.wait = null; reject(new Error('timeout ' + (label || cmd.toString(16)))); }, timeout);
+    hy.wait = { cmd, resolve: p => { clearTimeout(t); hy.wait = null; resolve(p); } };
+    const f = hyFrame(cmd, type, payload);
+    log(`TX ${label} ${hex(f.length > 40 ? f.slice(0, 40) : f)}${f.length > 40 ? ' …' : ''}`);
+    try { await hyWriteChar(hy.write, f, 20); } catch (e) { clearTimeout(t); hy.wait = null; reject(e); }
+  });
+}
+// Perintah set: balasan ACK payload [cmd, status]; status 0 = OK.
+async function hySet(cmd, payload, label, timeout = 10000) {
+  const p = await hyCmd(cmd, 0x71, payload, timeout, label);
+  const st = p.length >= 2 ? p[p.length - 1] : 0xFF;
+  if (st !== 0) throw new Error(`${label} ditolak jam (status ${st})`);
+  return p;
+}
+function hyOta(bytes, timeout = 10000, label = '') {
+  return new Promise(async (resolve, reject) => {
+    const t = setTimeout(() => { hy.otaWait = null; reject(new Error('timeout OTA ' + label)); }, timeout);
+    hy.otaWait = p => { clearTimeout(t); hy.otaWait = null; resolve(p); };
+    if (bytes) {
+      try { await hyWriteChar(hy.otaCtl, new Uint8Array(bytes), 128, true); } catch (e) { clearTimeout(t); hy.otaWait = null; reject(e); }
+    }
+  });
+}
+function hyOnNotify(src) {
+  return ev => {
+    const v = new Uint8Array(ev.target.value.buffer.slice(0));
+    if (src === '1531') {
+      log(`RX[1531] ${hex(v)}`);
+      if (hy.otaWait) hy.otaWait(v);
+      return;
+    }
+    if (src !== '8002') { log(`RX[${src}] ${hex(v)}  "${hyPrintable(v)}"`); return; }
+    const m = new Uint8Array(hy.buf.length + v.length);
+    m.set(hy.buf); m.set(v, hy.buf.length);
+    hy.buf = m;
+    while (hy.buf.length >= 6) {
+      if (hy.buf[0] !== 0x6F) { hy.buf = hy.buf.slice(1); continue; }
+      const len = hy.buf[3] | (hy.buf[4] << 8);
+      if (hy.buf.length < len + 6) break;
+      const f = hy.buf.slice(0, len + 6);
+      hy.buf = hy.buf.slice(len + 6);
+      const p = f.slice(5, 5 + len);
+      log(`RX cmd=0x${f[1].toString(16)} type=0x${f[2].toString(16)}: ${hex(p)}  "${hyPrintable(p)}"`);
+      // ACK set: payload [cmd, status]; balasan get: cmd sama dengan perintah.
+      const key = (len === 2 && hy.wait && p[0] === hy.wait.cmd) ? p[0] : f[1];
+      if (hy.wait && hy.wait.cmd === key) hy.wait.resolve(p);
+    }
+  };
+}
+
+async function haylouProbe(server) {
+  log(`Haylou terdeteksi: "${device.name}".`);
+  const svc = await server.getPrimaryService(0x6006);
+  hy.write = await svc.getCharacteristic(0x8001);
+  for (const [uuid, name] of [[0x8002, '8002'], [0x8004, '8004']]) {
+    try {
+      const c = await svc.getCharacteristic(uuid);
+      c.addEventListener('characteristicvaluechanged', hyOnNotify(name));
+      await c.startNotifications();
+    } catch (e) { log(`notify ${name} gagal: ${e.message}`); }
+  }
+  try {
+    const ota = await server.getPrimaryService(0x1530);
+    hy.otaCtl = await ota.getCharacteristic(0x1531);
+    hy.otaData = await ota.getCharacteristic(0x1532);
+    log(`izin 8001=[${hyProps(hy.write)}] 1531=[${hyProps(hy.otaCtl)}] 1532=[${hyProps(hy.otaData)}]`);
+    hy.otaCtl.addEventListener('characteristicvaluechanged', hyOnNotify('1531'));
+    await hy.otaCtl.startNotifications();
+  } catch (e) { log('layanan 0x1530 tidak terbuka: ' + e.message); }
+  for (const [label, [cmd, sub]] of HAYLOU_GETS) {
+    try { await hyCmd(cmd, 0x70, [sub], 4000, label); } catch (e) { log('  ' + e.message); }
+  }
+  hy.ready = !!(hy.otaCtl && hy.otaData);
+  setStatus(hy.ready ? 'Haylou siap: klik watch face (mode DIY)' : 'Haylou: info terbaca, transfer tidak tersedia');
+  if (hy.ready) { onlyHaylou = true; buildChips(); applyFilter(); }
+  document.body.dataset.conn = hy.ready ? 'on' : 'off';
+  $('btnDisconnect').disabled = false;
+  $('btnConnect').disabled = true;
+}
+
+// ---- gambar DIY ----
+function crc16ccitt(bytes, init = 0xFFFF) {           // CRC-16/CCITT-FALSE (init FFFF) / XMODEM (init 0)
+  let c = init;
+  for (const b of bytes) {
+    c ^= b << 8;
+    for (let i = 0; i < 8; i++) c = (c & 0x8000) ? ((c << 1) ^ 0x1021) & 0xFFFF : (c << 1) & 0xFFFF;
+  }
+  return c;
+}
+async function loadImg(url) {
+  const r = await fetch(url, { cache: 'no-cache' });
+  if (!r.ok) throw new Error('gambar latar tidak ada: ' + url);
+  return await createImageBitmap(await r.blob());
+}
+function rgb565(bitmap, size) {                       // RGB565 big-endian, potong tengah
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, size, size);
+  g.drawImage(bitmap, 0, 0, size, size);
+  const d = g.getImageData(0, 0, size, size).data;
+  const out = new Uint8Array(size * size * 2);
+  for (let i = 0, j = 0; i < d.length; i += 4, j += 2) {
+    const v = ((d[i] >> 3) << 11) | ((d[i + 1] >> 2) << 5) | (d[i + 2] >> 3);
+    out[j] = v >> 8; out[j + 1] = v & 255;
+  }
+  return out;
+}
+const le32 = v => [v & 255, (v >>> 8) & 255, (v >>> 16) & 255, (v >>> 24) & 255];
+const lvglHdr = (w, h) => le32((((w << 10) | (h << 21)) >>> 0) + 4);
+
+// ---- widget jam/tanggal + penggeser posisi (tanpa kirim ulang gambar) ----
+function hyWidgets(id, meta, tpos, dpos) {
+  const col = c => [c[0], c[1], c[2], 0xFF];                      // urutan kabel: R G B A
+  const pos = p => [0x00, 0x04, p[0] & 255, p[0] >> 8, p[1] & 255, p[1] >> 8];
+  const tc = meta.time_color || [255, 255, 255];
+  const w = [0x02, ...le32(id)];
+  w.push(0x00, 13, 0x02, 0x04, ...col(tc));
+  if (tpos) w.push(0x00, 13, ...pos(tpos));
+  w.push(0x01, 4, 0x02, 0x04, ...col(meta.date_color || tc));
+  if (dpos) w.push(0x01, 4, ...pos(dpos));
+  return w;
+}
+function hyLoadPos(label) {
+  try { return JSON.parse(localStorage.getItem('hyPos:' + label) || 'null'); } catch (e) { return null; }
+}
+function hyShowPanel() {
+  const L = hy.last;
+  if (!L) return;
+  $('hyPanel').style.display = '';
+  $('hyPanelName').textContent = L.label;
+  const t = L.time || [120, 180], d = L.date || [150, 290];
+  $('hyTX').value = t[0]; $('hyTY').value = t[1]; $('hyDX').value = d[0]; $('hyDY').value = d[1];
+}
+async function hyApplyPos() {
+  const L = hy.last;
+  if (!L) return;
+  const t = [+$('hyTX').value, +$('hyTY').value], d = [+$('hyDX').value, +$('hyDY').value];
+  try {
+    await hySet(0x1E, hyWidgets(L.id, L.meta, t, d), 'geser posisi', 8000);
+    L.time = t; L.date = d;
+    $('hyPanelMsg').textContent = `jam (${t}) · tanggal (${d}) — terkirim, cek jam`;
+  } catch (e) { $('hyPanelMsg').textContent = '❌ ' + e.message; }
+}
+function hyNudge(dx, dy) {
+  const which = $('hyWhich').value;
+  const X = which === 'time' ? 'hyTX' : 'hyDX', Y = which === 'time' ? 'hyTY' : 'hyDY';
+  $(X).value = Math.max(0, Math.min(466, +$(X).value + dx));
+  $(Y).value = Math.max(0, Math.min(466, +$(Y).value + dy));
+  hyApplyPos();
+}
+function hySavePos() {
+  const L = hy.last;
+  if (!L) return;
+  const v = { time: [+$('hyTX').value, +$('hyTY').value], date: [+$('hyDX').value, +$('hyDY').value] };
+  try { localStorage.setItem('hyPos:' + L.label, JSON.stringify(v)); } catch (e) {}
+  log(`Posisi Haylou disimpan untuk ${L.label}: ${JSON.stringify(v)}`);
+  $('hyPanelMsg').textContent = 'tersimpan — dipakai otomatis saat desain ini dikirim lagi';
+}
+
+async function haylouSendDiy(it) {
+  const meta = it.haylou;
+  if (!meta || !meta.bg) { alert('Desain ini belum punya latar Haylou (jalankan export_haylou.py).'); return; }
+  if (!confirm(`Kirim "${it.title || it.label}" ke Haylou sebagai watch face DIY?\n\nJam & tanggal digambar oleh firmware Haylou di atas latar ini (animasi tidak ikut).`)) return;
+  $('sendBox').style.display = '';
+  document.body.dataset.send = 'on';
+  setRing(0);
+  const say = s => { $('sendLabel').textContent = s; log(s); };
+  try {
+    say('Menyiapkan gambar…');
+    const bmp = await loadImg('/mine/' + encodeURIComponent(meta.bg));
+    showOnWatch('/mine/' + encodeURIComponent(meta.bg));
+    const bg = rgb565(bmp, 466), th = rgb565(bmp, 264);
+    const id = 20000 + crc16ccitt(th, 0);          // seperti app: 20000 + CRC16-XMODEM(thumbnail)
+
+    // 1) widget jam (13) & tanggal (4): warna + posisi (tersimpan > desain bila dicentang > default firmware).
+    const saved = hyLoadPos(it.label);
+    const tpos = saved ? saved.time : ($('hyPos').checked ? meta.time : null);
+    const dpos = saved ? saved.date : ($('hyPos').checked ? meta.date : null);
+    hy.last = { label: it.label, id, meta, time: tpos, date: dpos };
+    say(`ID DIY ${id} — set widget jam/tanggal${tpos ? ' (posisi ' + tpos + ' / ' + dpos + ')' : ''}…`);
+    await hySet(0x1E, hyWidgets(id, meta, tpos, dpos), 'SetCustomWatchface', 15000);
+
+    // 2) alamat slot dari JAM (bukan dikarang).
+    const p = await hyCmd(0x1E, 0x70, [0x01, ...le32(id)], 10000, 'GetOtaAddress');
+    if (p.length !== 5) throw new Error('balasan alamat tidak dikenal: ' + hex(p));
+    const addr = Array.from(p.slice(1, 5));
+    if (addr.every(b => b === 0xFF)) throw new Error('jam tidak memberi slot (FFFFFFFF) — dibatalkan, tidak ada yang ditulis');
+    log('alamat slot: ' + hex(addr));
+
+    // 3) blob gambar (tanpa alamat): hdr+bg, hdr+thumb, crc16(bg) LE, id&FF, "UFACE".
+    const crcBg = crc16ccitt(bg, 0xFFFF);
+    const tail = [crcBg & 255, crcBg >> 8, id & 255, ...'UFACE'.split('').map(c => c.charCodeAt(0))];
+    const file = new Uint8Array(4 + bg.length + 4 + th.length + tail.length);
+    let o = 0;
+    file.set(lvglHdr(466, 466), o); o += 4; file.set(bg, o); o += bg.length;
+    file.set(lvglHdr(264, 264), o); o += 4; file.set(th, o); o += th.length;
+    file.set(tail, o);
+    const crcFile = crc16ccitt(file, 0xFFFF);
+
+    // 4) masuk mode transfer di alamat itu.
+    await hySet(0x0E, [0x00, ...addr], 'EnterOta');
+    // 5) kontrol 0x1531: start (total termasuk 4 byte alamat), lalu setting (TIPE 4 = GAMBAR, dikunci).
+    let r = await hyOta([0x01, ...le32(file.length + 4)], 10000, 'start');
+    if (r[0] !== 0x01 || r[1] === 0x00 || r[1] === 0x3A || r[1] === 0xFF) throw new Error('start ditolak: ' + hex(r));
+    const OTA_TYPE_PICTURE = 4;
+    r = await hyOta([0x02, OTA_TYPE_PICTURE, ...addr, ...le32(file.length), crcFile & 255, crcFile >> 8, 0, 0, 0x14], 15000, 'setting');
+    if (r[0] !== 0x02 || r[1] === 0x00 || r[1] === 0x3A) throw new Error('setting ditolak: ' + hex(r));
+
+    // 6) data per 2048 byte, ditulis 128 byte; tunggu [03, st, 02|04] tiap potongan.
+    const PIECE = 2048;
+    for (let off = 0; off < file.length; off += PIECE) {
+      const piece = file.slice(off, off + PIECE);
+      const waitAck = hyOta(null, 10000, 'potongan');
+      await hyWriteChar(hy.otaData, piece, 128);
+      r = await waitAck;
+      setRing(Math.min(1, (off + piece.length) / file.length));
+      $('sendProgress').max = file.length; $('sendProgress').value = off + piece.length;
+      $('sendLabel').textContent = `Haylou: ${Math.round((off + piece.length) / 1024)} / ${Math.round(file.length / 1024)} KB`;
+      if (r[0] !== 0x03 || r[1] === 0x00 || r[1] === 0x3A) throw new Error('potongan ditolak: ' + hex(r));
+      if (r[2] === 0x04) break;
+    }
+    // 7) cek CRC lalu selesai.
+    r = await hyOta([0x04], 15000, 'cek CRC');
+    if (r[0] !== 0x04 || r[1] === 0x00 || r[1] === 0x3A) throw new Error('cek CRC gagal: ' + hex(r));
+    r = await hyOta([0x05], 10000, 'selesai');
+    if (r[0] !== 0x05) throw new Error('akhir transfer tidak dikonfirmasi: ' + hex(r));
+    await new Promise(res => setTimeout(res, 2000));
+    document.body.dataset.send = 'done';
+    say(`✅ Terkirim ke Haylou (${Math.round(file.length / 1024)} KB). Cek jam kamu.`);
+    hyShowPanel();
+  } catch (e) {
+    document.body.dataset.send = 'fail';
+    say('❌ Haylou: ' + e.message);
+  }
+}
+
+async function diagnose(server) {
+  log(`DIAGNOSA "${device.name}" (id ${device.id})`);
+  let services = [];
+  try { services = await server.getPrimaryServices(); } catch (e) { log('Tidak ada layanan yang cocok dengan daftar uji: ' + e.message); }
+  const dec = new TextDecoder();
+  for (const s of services) {
+    log(`  layanan ${s.uuid}`);
+    let chars = [];
+    try { chars = await s.getCharacteristics(); } catch (e) { log('    (tidak bisa membaca karakteristik: ' + e.message + ')'); }
+    for (const c of chars) {
+      const p = Object.entries(c.properties).filter(([, v]) => v === true).map(([k]) => k).join(',');
+      let val = '';
+      if (c.properties.read && s.uuid.startsWith('0000180a')) {
+        try { val = ' = "' + dec.decode(await c.readValue()) + '"'; } catch (e) {}
+      } else if (c.properties.read && s.uuid.startsWith('0000180f')) {
+        try { val = ' = ' + (await c.readValue()).getUint8(0) + '%'; } catch (e) {}
+      }
+      log(`    karakteristik ${c.uuid} [${p}]${val}`);
+    }
+  }
+  log('Selesai diagnosa. Klik "Salin log" (Pengaturan lanjutan) dan kirim ke Claude.');
+  try { device.gatt.disconnect(); } catch (e) {}
+}
+
+// BleKey = [cmd, key]
+const KEY = { IDENTITY: [0x03, 0x01], WATCH_FACE: [0x07, 0x01] };
+const FLAG = { UPDATE: 0x00, READ: 0x10, CREATE: 0x20 };
+
+const CRC16_TABLE = (() => {
+  const t = new Uint16Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let j = 0; j < 8; j++) c = (c & 1) ? (c >>> 1) ^ 0xA001 : c >>> 1;
+    t[i] = c;
+  }
+  return t;
+})();
+function crc16(bytes, start) {
+  let c = 0;
+  for (let i = start; i < bytes.length; i++) c = CRC16_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+  return c;
+}
+
+// [0xAB][flags|1][len BE = payload+3][crc BE over bytes[6..]][cmd][key][keyFlag][payload]
+function makeFrame(header, key, flag, payload = new Uint8Array(0)) {
+  const f = new Uint8Array(payload.length + 9);
+  f[0] = 0xAB;
+  f[1] = header | 1;
+  f[2] = (payload.length + 3) >> 8; f[3] = (payload.length + 3) & 0xff;
+  f[6] = key[0]; f[7] = key[1]; f[8] = flag;
+  f.set(payload, 9);
+  const c = crc16(f, 6);
+  f[4] = c >> 8; f[5] = c & 0xff;
+  return f;
+}
+const u32be = v => [(v >>> 24) & 255, (v >>> 16) & 255, (v >>> 8) & 255, v & 255];
+const readU32be = (p, i) => ((p[i] << 24) | (p[i + 1] << 16) | (p[i + 2] << 8) | p[i + 3]) >>> 0;
+
+const $ = id => document.getElementById(id);
+const hex = b => Array.from(b, x => x.toString(16).padStart(2, '0')).join(' ');
+function log(msg) { $('log').textContent += new Date().toLocaleTimeString() + '  ' + msg + '\n'; $('log').scrollTop = 1e9; }
+function setStatus(s) { $('status').textContent = s; }
+
+// ---------- BLE ----------
+let device, chWrite, rxBuf = new Uint8Array(0), writing = Promise.resolve();
+let ioBufferSize = 1018;   // dari info jam (ISW-O43 = 1018)
+let stream = null;          // { data, slot, timer, resolve, reject }
+
+function getDeviceId() {
+  let id;
+  try { id = parseInt(localStorage.getItem('deviceId'), 10); } catch (e) {}
+  if (!Number.isFinite(id)) {
+    id = (Math.random() * 0x7fffffff) | 0;
+    try { localStorage.setItem('deviceId', id); } catch (e) {}
+  }
+  return id;
+}
+
+function write(frame, quiet) {
+  writing = writing.then(async () => {
+    if (!quiet) log('TX ' + hex(frame));
+    const piece = Math.max(20, Math.min(512, parseInt($('pieceSize').value, 10) || 244));
+    for (let o = 0; o < frame.length; o += piece) {
+      await chWrite.writeValueWithResponse(frame.slice(o, o + piece));
+    }
+  }).catch(e => { log('TX error: ' + e.message); if (stream) failStream('gagal menulis: ' + e.message); });
+  return writing;
+}
+
+function onNotify(ev) {
+  const v = new Uint8Array(ev.target.value.buffer.slice(0));
+  const merged = new Uint8Array(rxBuf.length + v.length);
+  merged.set(rxBuf); merged.set(v, rxBuf.length);
+  rxBuf = merged;
+  while (rxBuf.length >= 9) {
+    if (rxBuf[0] !== 0xAB) { rxBuf = rxBuf.slice(1); continue; }
+    const total = ((rxBuf[2] << 8) | rxBuf[3]) + 6;
+    if (rxBuf.length < total) break;
+    handleFrame(rxBuf.slice(0, total));
+    rxBuf = rxBuf.slice(total);
+  }
+}
+
+function handleFrame(f) {
+  const isReply = (f[1] & 0x10) !== 0, isNack = (f[1] & 0x20) !== 0;
+  const cmd = f[6], key = f[7], flag = f[8], p = f.slice(9);
+  const isStream = cmd === KEY.WATCH_FACE[0] && key === KEY.WATCH_FACE[1];
+  if (isStream && stream) stream.rx++;
+  if (!(isStream && stream && stream.rx > 3)) log(`RX ${hex(f.length > 48 ? f.slice(0, 48) : f)}${f.length > 48 ? ' …' : ''}  [cmd=${cmd} key=${key} flag=0x${flag.toString(16)}${isReply ? ' REPLY' : ''}${isNack ? ' NACK' : ''}]`);
+  if (!isReply && !isNack) write(makeFrame(0x10, [cmd, key], flag), true); // ACK
+
+  if (cmd === 0x03 && key === 0x01 && flag === FLAG.CREATE && isReply) {
+    setStatus('terhubung & siap: ' + (device.name || ''));
+    toggle(true);
+  }
+  if (cmd === 0x03 && key === 0x01 && flag === FLAG.UPDATE && !isReply) {
+    const info = parseInfo(p);
+    if (info) {
+      log('Info jam: ' + JSON.stringify(info));
+      if (info.ioBufferSize > 0) ioBufferSize = info.ioBufferSize;
+    }
+  }
+  // Jam JL melaporkan progres di balasan (REPLY) paket stream: status | total | completed.
+  if (isStream && !isNack && flag === FLAG.UPDATE && p.length >= 9) onStreamProgress(p);
+  if (isStream && isNack) failStream('jam menolak (NACK)');
+}
+
+// Hanya ambil field yang dibutuhkan. Payload diawali 1 byte status.
+function parseInfo(p) {
+  try {
+    let i = 5;
+    const untilZero = () => { const s = i; while (i < p.length && p[i] !== 0) i++; const b = p.slice(s, i); i++; return new TextDecoder().decode(b); };
+    untilZero(); // dataKeys
+    const bleName = untilZero(); untilZero(); // address
+    const platform = untilZero(), prototype = untilZero(), firmwareFlag = untilZero();
+    i++; // aGpsType
+    const ioBufferSize = (p[i] << 8) | p[i + 1];
+    return { bleName, platform, prototype, firmwareFlag, ioBufferSize };
+  } catch (e) { return null; }
+}
+
+$('btnConnect').onclick = async () => {
+  if (!navigator.bluetooth) { alert('Browser ini tidak mendukung Web Bluetooth. Pakai Chrome/Edge di http://localhost:8765.'); return; }
+  try {
+    device = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [NUS, ...PROBE_SERVICES] });
+    device.addEventListener('gattserverdisconnected', () => { setStatus('terputus'); log('Terputus dari jam'); toggle(false); if (stream) failStream('koneksi terputus'); });
+    setStatus('menghubungkan ' + (device.name || device.id) + '…');
+    document.body.dataset.conn = 'wait';
+    $('watchName').textContent = device.name || 'jam';
+    const server = await device.gatt.connect();
+    let svc;
+    try {
+      svc = await server.getPrimaryService(NUS);
+    } catch (e) {
+      // Bukan jam keluarga CO FIT/SMA. Haylou (0x6006)? Kalau bukan, catat layanan untuk diagnosa.
+      document.body.dataset.conn = 'off';
+      let isHaylou = false;
+      try { await server.getPrimaryService(0x6006); isHaylou = true; } catch (err) {}
+      if (isHaylou) {
+        try { await haylouProbe(server); } catch (err) { log('Haylou: ' + err.message); }
+        return;
+      }
+      setStatus('bukan jam CO FIT — lihat log diagnosa');
+      await diagnose(server);
+      return;
+    }
+    chWrite = await svc.getCharacteristic(CH_WRITE);
+    const chNotify = await svc.getCharacteristic(CH_NOTIFY);
+    chNotify.addEventListener('characteristicvaluechanged', onNotify);
+    await chNotify.startNotifications();
+    log(`Konek ke "${device.name}", kirim bind…`);
+    $('btnDisconnect').disabled = false; $('btnConnect').disabled = true;
+    write(makeFrame(0, KEY.IDENTITY, FLAG.CREATE, new Uint8Array(u32be(getDeviceId()))));
+  } catch (e) { log('Gagal konek: ' + e.message); setStatus('gagal konek: ' + e.message); document.body.dataset.conn = 'off'; }
+};
+$('btnDisconnect').onclick = () => device && device.gatt.disconnect();
+let ready = false;
+function toggle(on) {
+  ready = on;
+  document.body.dataset.conn = on ? 'on' : 'off';
+  $('fileBin').disabled = !on;
+  $('btnDisconnect').disabled = !on && !(device && device.gatt.connected);
+  $('btnConnect').disabled = on;
+}
+
+// ---------- Stream watch face ----------
+function sendChunk(offset) {
+  const s = stream;
+  const end = Math.min(offset + ioBufferSize, s.data.length);
+  const payload = new Uint8Array(9 + end - offset);
+  payload[0] = s.slot;
+  payload.set(u32be(s.data.length), 1);
+  payload.set(u32be(offset), 5);
+  payload.set(s.data.subarray(offset, end), 9);
+  armWatchdog();
+  write(makeFrame(0, KEY.WATCH_FACE, FLAG.UPDATE, payload), true);
+}
+// Kalau potongan pertama tidak dijawab sama sekali, kemungkinan potongan tulis > MTU.
+// Turunkan bertahap lalu kirim ulang dari awal.
+const PIECE_FALLBACK = [244, 180, 100, 20];
+function armWatchdog() {
+  clearTimeout(stream.timer);
+  stream.timer = setTimeout(() => {
+    if (!stream) return;
+    const cur = parseInt($('pieceSize').value, 10);
+    const next = PIECE_FALLBACK.find(v => v < cur);
+    if (stream.rx === 0 && next) {
+      log(`Tidak ada respons dengan potongan ${cur} byte, coba ${next} byte…`);
+      $('pieceSize').value = next;
+      sendChunk(0);
+      return;
+    }
+    failStream('jam tidak merespons (timeout)');
+  }, stream.rx === 0 ? 8000 : 20000);
+}
+function onStreamProgress(p) {
+  if (!stream) return;
+  const status = p[0] >> 4, err = p[0] & 0x0f;
+  const total = readU32be(p, 1), completed = readU32be(p, 5);
+  $('sendProgress').max = total || 1; $('sendProgress').value = completed;
+  setRing(total ? completed / total : 0);
+  $('sendLabel').textContent = `${stream.name}: ${Math.floor(completed / 1024)} / ${Math.floor(total / 1024)} KB`;
+  if (status !== 0 || err !== 0) return failStream(`jam melapor error (status=${status}, kode=${err}, byte=0x${p[0].toString(16)})`);
+  if (completed >= total) {
+    clearTimeout(stream.timer);
+    const t = ((Date.now() - stream.start) / 1000).toFixed(0);
+    log(`Selesai: ${stream.name} (${total} byte, ${t} detik)`);
+    $('sendLabel').textContent = `✅ ${stream.name} terkirim (${t} detik). Cek jam kamu.`;
+    document.body.dataset.send = 'done';
+    stream = null;
+    return;
+  }
+  sendChunk(completed);
+}
+function failStream(reason) {
+  if (!stream) return;
+  clearTimeout(stream.timer);
+  log('Gagal kirim: ' + reason);
+  $('sendLabel').textContent = `❌ ${stream.name}: ${reason}`;
+  document.body.dataset.send = 'fail';
+  stream = null;
+}
+// Bezel jam di hero = progress ring (CSS var --p, 0..1).
+function setRing(frac) {
+  $('watch').style.setProperty('--p', frac.toFixed(4));
+  $('pct').textContent = Math.floor(frac * 100) + '%';
+}
+function showOnWatch(src) {
+  $('faceIn').innerHTML = '';
+  const img = new Image();
+  img.alt = '';
+  img.src = src;
+  $('faceIn').appendChild(img);
+}
+setInterval(() => {
+  const c = $('clock');
+  if (c) c.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+}, 1000);
+function startStream(name, data) {
+  if (!ready) { alert('Konek ke jam dulu.'); return; }
+  if (stream) { alert('Masih mengirim watch face lain.'); return; }
+  stream = { name, data, slot: parseInt($('slot').value, 10) || 0, start: Date.now(), rx: 0 };
+  $('sendBox').style.display = '';
+  $('sendProgress').max = data.length; $('sendProgress').value = 0;
+  document.body.dataset.send = 'on';
+  setRing(0);
+  $('sendLabel').textContent = `${name}: mulai mengirim ${Math.round(data.length / 1024)} KB…`;
+  log(`Kirim ${name}: ${data.length} byte, paket ${ioBufferSize}, potongan tulis ${$('pieceSize').value}, slot ${stream.slot}`);
+  log('TX header paket 0: ' + hex(makeFrame(0, KEY.WATCH_FACE, FLAG.UPDATE, new Uint8Array([stream.slot, ...u32be(data.length), 0, 0, 0, 0, ...data.subarray(0, 8)]))));
+  sendChunk(0);
+}
+
+$('fileBin').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const data = new Uint8Array(await f.arrayBuffer());
+  // Semua watch face resmi JL 466x466 (AM05/AM22) punya pola header ini:
+  // byte[1]=0x00, byte[3]=0x02 (format gambar RGB565), byte[10..13]=18 01 18 01.
+  const ok = data.length > 64 && data[1] === 0x00 && data[3] === 0x02 &&
+    data[10] === 0x18 && data[11] === 0x01 && data[12] === 0x18 && data[13] === 0x01;
+  if (!ok && !confirm(`"${f.name}" sepertinya BUKAN watch face untuk jam ini (format/ukuran layar beda).\n\nMengirim file yang salah bisa membuat jam error/hang dan perlu di-restart.\n\nTetap kirim?`)) {
+    e.target.value = '';
+    return;
+  }
+  showOnWatch('data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><text x="50" y="54" font-family="monospace" font-size="9" fill="#9dfc6b" text-anchor="middle">.bin</text></svg>'));
+  startStream(f.name, data);
+  e.target.value = '';
+};
+
+// ---------- Katalog ----------
+// catalog.json dibuat oleh build_catalog.py (gabungan beberapa sumber resmi, tanpa duplikat).
+const PAGE = 60;
+let catalog = [], filtered = [], shown = 0;
+// Default hanya koleksi sendiri (D:/watch); katalog resmi muncul kalau dicentang.
+function showOfficial() {
+  try { return localStorage.getItem('showOfficial') === '1'; } catch (e) { return false; }
+}
+async function loadCatalog() {
+  $('catInfo').textContent = 'memuat…';
+  $('fOfficial').checked = showOfficial();
+  catalog = [];
+  try {
+    const mine = await (await fetch('/mine/list.json', { cache: 'no-cache' })).json();
+    catalog = mine.items.map(m => ({
+      src: 'Koleksi saya', cat: m.category || 'Lainnya', anim: m.anim || /_anim$/i.test(m.name), label: m.name, title: m.title || m.name, size: m.size,
+      previewUrl: m.preview ? '/mine/' + encodeURIComponent(m.preview) : '', binUrl: '/mine/' + encodeURIComponent(m.bin),
+      haylou: m.haylou,
+    }));
+  } catch (e) { log('Koleksi sendiri tidak terbaca: ' + e.message); }
+  const mineCount = catalog.length;
+  if (showOfficial()) {
+    try {
+      const r = await fetch('catalog.json', { cache: 'no-cache' });
+      if (!r.ok) throw new Error('catalog.json belum ada, jalankan build_catalog.py');
+      const data = await r.json();
+      catalog = catalog.concat(data.items.map(it => ({ ...it, label: '#' + it.id, previewUrl: '/oss/' + it.preview, binUrl: '/oss/' + it.bin })));
+    } catch (e) { log('Katalog resmi gagal dimuat: ' + e.message); }
+  }
+  fillSelect($('fSrc'), [...new Set(catalog.map(i => i.src))], 'Semua sumber');
+  fillSelect($('fCat'), [...new Set(catalog.map(i => i.cat))], 'Semua kategori');
+  buildChips();
+  $('fSrc').style.display = showOfficial() ? '' : 'none';
+  applyFilter();
+  const anim = catalog.filter(i => i.anim).length;
+  $('catInfo').textContent = showOfficial()
+    ? `${mineCount} koleksi saya + ${catalog.length - mineCount} resmi`
+    : `${mineCount} watch face koleksi saya · ${anim} beranimasi`;
+}
+function fillSelect(sel, values, label) {
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">${label}</option>` + values.map(v => {
+    const n = catalog.filter(i => i.src === v || i.cat === v).length;
+    return `<option value="${v}">${v} (${n})</option>`;
+  }).join('');
+  sel.value = cur;
+}
+// Tab kategori (+ tombol Animasi). Urutan tetap, kategori lain menyusul.
+const CAT_ORDER = ['Analog', 'Digital', 'IT & Programmer', 'Gaming', 'Anime'];
+let onlyAnim = false, onlyHaylou = false;
+// Cocok untuk Haylou DIY: punya latar Haylou, bukan analog.
+const hyOk = i => !!(i.haylou && i.haylou.bg && !i.haylou.analog);
+function buildChips() {
+  const cats = [...new Set(catalog.map(i => i.cat))].sort((a, b) => {
+    const ia = CAT_ORDER.indexOf(a), ib = CAT_ORDER.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
+  });
+  const cur = $('fCat').value;
+  const chip = (label, val, n) => `<button class="chip${cur === val ? ' on' : ''}" data-cat="${escapeHtml(val)}">${escapeHtml(label)}<span>${n}</span></button>`;
+  $('chips').innerHTML = chip('Semua', '', catalog.length) + cats.map(c => chip(c, c, catalog.filter(i => i.cat === c).length)).join('') +
+    `<button class="chip anim${onlyAnim ? ' on' : ''}" data-anim="1">▶ Animasi<span>${catalog.filter(i => i.anim).length}</span></button>` +
+    `<button class="chip anim${onlyHaylou ? ' on' : ''}" data-hy="1">✓ Cocok Haylou<span>${catalog.filter(hyOk).length}</span></button>`;
+  $('chips').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    if (b.dataset.anim) onlyAnim = !onlyAnim; else if (b.dataset.hy) onlyHaylou = !onlyHaylou; else $('fCat').value = b.dataset.cat;
+    buildChips();
+    applyFilter();
+  });
+}
+function applyFilter() {
+  const src = $('fSrc').value, cat = $('fCat').value;
+  filtered = catalog.filter(i => (!src || i.src === src) && (!cat || i.cat === cat) && (!onlyAnim || i.anim) && (!onlyHaylou || hyOk(i)));
+  $('grid').innerHTML = '';
+  shown = 0;
+  showMore();
+}
+function showMore() {
+  for (const it of filtered.slice(shown, shown + PAGE)) {
+    const el = document.createElement('div');
+    el.className = 'face';
+    el.innerHTML = `<span class="pic"><img loading="lazy" src="${it.previewUrl}" alt="">${it.anim ? '<b class="badge">ANIM</b>' : ''}</span><div>${escapeHtml(it.title || it.label)} · ${Math.round(it.size / 1024)} KB</div>`;
+    el.title = it.label;
+    el.title = it.src + ' / ' + it.cat;
+    el.tabIndex = 0;
+    el.onclick = () => pickFace(it);
+    el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickFace(it); } };
+    $('grid').appendChild(el);
+  }
+  shown = Math.min(shown + PAGE, filtered.length);
+  $('btnMore').style.display = shown < filtered.length ? '' : 'none';
+  $('btnMore').textContent = `Tampilkan lebih banyak (${filtered.length - shown} lagi)`;
+}
+async function pickFace(it) {
+  if (hy.ready) return haylouSendDiy(it);
+  if (!ready) { alert('Konek ke jam dulu.'); return; }
+  if (!confirm(`Kirim watch face ${it.label} (${it.src}) ke jam?`)) return;
+  $('sendBox').style.display = '';
+  $('sendLabel').textContent = `Mengunduh ${it.label}…`;
+  if (it.previewUrl) showOnWatch(it.previewUrl);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  try {
+    const r = await fetch(it.binUrl, { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    startStream(it.label, new Uint8Array(await r.arrayBuffer()));
+  } catch (e) { $('sendLabel').textContent = `❌ gagal unduh ${it.label}: ${e.message}`; }
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+$('fOfficial').onchange = e => {
+  try { localStorage.setItem('showOfficial', e.target.checked ? '1' : '0'); } catch (err) {}
+  loadCatalog();
+};
+$('fSrc').onchange = applyFilter;
+$('fCat').onchange = applyFilter;
+$('btnMore').onclick = showMore;
+$('btnReload').onclick = loadCatalog;
+$('btnCopy').onclick = () => navigator.clipboard.writeText($('log').textContent);
+loadCatalog();
+</script>
+</body>
+</html>

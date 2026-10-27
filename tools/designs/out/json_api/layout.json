@@ -1,0 +1,261 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "hour",
+   "alpha": false,
+   "x": 140,
+   "y": 150,
+   "w": 34,
+   "h": 42,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_hour/00.png",
+    "e02_hour/01.png",
+    "e02_hour/02.png",
+    "e02_hour/03.png",
+    "e02_hour/04.png",
+    "e02_hour/05.png",
+    "e02_hour/06.png",
+    "e02_hour/07.png",
+    "e02_hour/08.png",
+    "e02_hour/09.png"
+   ]
+  },
+  {
+   "type": "min",
+   "alpha": false,
+   "x": 242,
+   "y": 150,
+   "w": 34,
+   "h": 42,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_min/00.png",
+    "e03_min/01.png",
+    "e03_min/02.png",
+    "e03_min/03.png",
+    "e03_min/04.png",
+    "e03_min/05.png",
+    "e03_min/06.png",
+    "e03_min/07.png",
+    "e03_min/08.png",
+    "e03_min/09.png"
+   ]
+  },
+  {
+   "type": "sec",
+   "alpha": false,
+   "x": 327,
+   "y": 173,
+   "w": 17,
+   "h": 19,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e04_sec/00.png",
+    "e04_sec/01.png",
+    "e04_sec/02.png",
+    "e04_sec/03.png",
+    "e04_sec/04.png",
+    "e04_sec/05.png",
+    "e04_sec/06.png",
+    "e04_sec/07.png",
+    "e04_sec/08.png",
+    "e04_sec/09.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": false,
+   "x": 189,
+   "y": 211,
+   "w": 40,
+   "h": 15,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e05_weekday/00.png",
+    "e05_weekday/01.png",
+    "e05_weekday/02.png",
+    "e05_weekday/03.png",
+    "e05_weekday/04.png",
+    "e05_weekday/05.png",
+    "e05_weekday/06.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": false,
+   "x": 241,
+   "y": 213,
+   "w": 12,
+   "h": 13,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e06_day/00.png",
+    "e06_day/01.png",
+    "e06_day/02.png",
+    "e06_day/03.png",
+    "e06_day/04.png",
+    "e06_day/05.png",
+    "e06_day/06.png",
+    "e06_day/07.png",
+    "e06_day/08.png",
+    "e06_day/09.png"
+   ]
+  },
+  {
+   "type": "month",
+   "alpha": false,
+   "x": 277,
+   "y": 213,
+   "w": 12,
+   "h": 13,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e07_month/00.png",
+    "e07_month/01.png",
+    "e07_month/02.png",
+    "e07_month/03.png",
+    "e07_month/04.png",
+    "e07_month/05.png",
+    "e07_month/06.png",
+    "e07_month/07.png",
+    "e07_month/08.png",
+    "e07_month/09.png"
+   ]
+  },
+  {
+   "type": "step",
+   "alpha": false,
+   "x": 297,
+   "y": 244,
+   "w": 12,
+   "h": 13,
+   "gravity": 12,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e08_step/00.png",
+    "e08_step/01.png",
+    "e08_step/02.png",
+    "e08_step/03.png",
+    "e08_step/04.png",
+    "e08_step/05.png",
+    "e08_step/06.png",
+    "e08_step/07.png",
+    "e08_step/08.png",
+    "e08_step/09.png"
+   ]
+  },
+  {
+   "type": "heart",
+   "alpha": false,
+   "x": 297,
+   "y": 276,
+   "w": 12,
+   "h": 13,
+   "gravity": 12,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e09_heart/00.png",
+    "e09_heart/01.png",
+    "e09_heart/02.png",
+    "e09_heart/03.png",
+    "e09_heart/04.png",
+    "e09_heart/05.png",
+    "e09_heart/06.png",
+    "e09_heart/07.png",
+    "e09_heart/08.png",
+    "e09_heart/09.png",
+    "e09_heart/10.png"
+   ]
+  },
+  {
+   "type": "battery_level",
+   "alpha": false,
+   "x": 237,
+   "y": 306,
+   "w": 62,
+   "h": 27,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e10_battery_level/00.png",
+    "e10_battery_level/01.png",
+    "e10_battery_level/02.png",
+    "e10_battery_level/03.png",
+    "e10_battery_level/04.png",
+    "e10_battery_level/05.png"
+   ]
+  }
+ ]
+}

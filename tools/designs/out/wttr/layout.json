@@ -1,0 +1,243 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "weather_icon",
+   "alpha": false,
+   "x": 92,
+   "y": 132,
+   "w": 101,
+   "h": 95,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_weather_icon/00.png",
+    "e02_weather_icon/01.png",
+    "e02_weather_icon/02.png",
+    "e02_weather_icon/03.png",
+    "e02_weather_icon/04.png",
+    "e02_weather_icon/05.png",
+    "e02_weather_icon/06.png",
+    "e02_weather_icon/07.png",
+    "e02_weather_icon/08.png",
+    "e02_weather_icon/09.png",
+    "e02_weather_icon/10.png",
+    "e02_weather_icon/11.png"
+   ]
+  },
+  {
+   "type": "temperature",
+   "alpha": false,
+   "x": 240,
+   "y": 150,
+   "w": 17,
+   "h": 19,
+   "gravity": 12,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_temperature/00.png",
+    "e03_temperature/01.png",
+    "e03_temperature/02.png",
+    "e03_temperature/03.png",
+    "e03_temperature/04.png",
+    "e03_temperature/05.png",
+    "e03_temperature/06.png",
+    "e03_temperature/07.png",
+    "e03_temperature/08.png",
+    "e03_temperature/09.png",
+    "e03_temperature/10.png",
+    "e03_temperature/11.png"
+   ]
+  },
+  {
+   "type": "hour",
+   "alpha": false,
+   "x": 99,
+   "y": 244,
+   "w": 48,
+   "h": 58,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e04_hour/00.png",
+    "e04_hour/01.png",
+    "e04_hour/02.png",
+    "e04_hour/03.png",
+    "e04_hour/04.png",
+    "e04_hour/05.png",
+    "e04_hour/06.png",
+    "e04_hour/07.png",
+    "e04_hour/08.png",
+    "e04_hour/09.png"
+   ]
+  },
+  {
+   "type": "min",
+   "alpha": false,
+   "x": 229,
+   "y": 244,
+   "w": 48,
+   "h": 58,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e05_min/00.png",
+    "e05_min/01.png",
+    "e05_min/02.png",
+    "e05_min/03.png",
+    "e05_min/04.png",
+    "e05_min/05.png",
+    "e05_min/06.png",
+    "e05_min/07.png",
+    "e05_min/08.png",
+    "e05_min/09.png"
+   ]
+  },
+  {
+   "type": "sec",
+   "alpha": false,
+   "x": 333,
+   "y": 283,
+   "w": 17,
+   "h": 19,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e06_sec/00.png",
+    "e06_sec/01.png",
+    "e06_sec/02.png",
+    "e06_sec/03.png",
+    "e06_sec/04.png",
+    "e06_sec/05.png",
+    "e06_sec/06.png",
+    "e06_sec/07.png",
+    "e06_sec/08.png",
+    "e06_sec/09.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": false,
+   "x": 182,
+   "y": 316,
+   "w": 37,
+   "h": 15,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e07_weekday/00.png",
+    "e07_weekday/01.png",
+    "e07_weekday/02.png",
+    "e07_weekday/03.png",
+    "e07_weekday/04.png",
+    "e07_weekday/05.png",
+    "e07_weekday/06.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": false,
+   "x": 229,
+   "y": 318,
+   "w": 11,
+   "h": 13,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e08_day/00.png",
+    "e08_day/01.png",
+    "e08_day/02.png",
+    "e08_day/03.png",
+    "e08_day/04.png",
+    "e08_day/05.png",
+    "e08_day/06.png",
+    "e08_day/07.png",
+    "e08_day/08.png",
+    "e08_day/09.png"
+   ]
+  },
+  {
+   "type": "month",
+   "alpha": false,
+   "x": 262,
+   "y": 318,
+   "w": 11,
+   "h": 13,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e09_month/00.png",
+    "e09_month/01.png",
+    "e09_month/02.png",
+    "e09_month/03.png",
+    "e09_month/04.png",
+    "e09_month/05.png",
+    "e09_month/06.png",
+    "e09_month/07.png",
+    "e09_month/08.png",
+    "e09_month/09.png"
+   ]
+  }
+ ]
+}

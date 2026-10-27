@@ -1,0 +1,146 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": false,
+   "x": 214,
+   "y": 239,
+   "w": 38,
+   "h": 19,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_weekday/00.png",
+    "e02_weekday/01.png",
+    "e02_weekday/02.png",
+    "e02_weekday/03.png",
+    "e02_weekday/04.png",
+    "e02_weekday/05.png",
+    "e02_weekday/06.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": false,
+   "x": 221,
+   "y": 269,
+   "w": 12,
+   "h": 17,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_day/00.png",
+    "e03_day/01.png",
+    "e03_day/02.png",
+    "e03_day/03.png",
+    "e03_day/04.png",
+    "e03_day/05.png",
+    "e03_day/06.png",
+    "e03_day/07.png",
+    "e03_day/08.png",
+    "e03_day/09.png"
+   ]
+  },
+  {
+   "type": "sec",
+   "alpha": false,
+   "x": 219,
+   "y": 193,
+   "w": 14,
+   "h": 17,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e04_sec/00.png",
+    "e04_sec/01.png",
+    "e04_sec/02.png",
+    "e04_sec/03.png",
+    "e04_sec/04.png",
+    "e04_sec/05.png",
+    "e04_sec/06.png",
+    "e04_sec/07.png",
+    "e04_sec/08.png",
+    "e04_sec/09.png"
+   ]
+  },
+  {
+   "type": "needle_min",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 330,
+   "h": 330,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 165,
+   "b19": 165,
+   "images": [
+    "e05_needle_min/00.png"
+   ]
+  },
+  {
+   "type": "needle_hour",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 204,
+   "h": 204,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 102,
+   "b19": 102,
+   "images": [
+    "e06_needle_hour/00.png"
+   ]
+  }
+ ]
+}

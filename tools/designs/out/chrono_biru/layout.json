@@ -1,0 +1,137 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": false,
+   "x": 205,
+   "y": 108,
+   "w": 56,
+   "h": 28,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_weekday/00.png",
+    "e02_weekday/01.png",
+    "e02_weekday/02.png",
+    "e02_weekday/03.png",
+    "e02_weekday/04.png",
+    "e02_weekday/05.png",
+    "e02_weekday/06.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": false,
+   "x": 348,
+   "y": 219,
+   "w": 18,
+   "h": 28,
+   "gravity": 9,
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_day/00.png",
+    "e03_day/01.png",
+    "e03_day/02.png",
+    "e03_day/03.png",
+    "e03_day/04.png",
+    "e03_day/05.png",
+    "e03_day/06.png",
+    "e03_day/07.png",
+    "e03_day/08.png",
+    "e03_day/09.png"
+   ]
+  },
+  {
+   "type": "needle_hour",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 18,
+   "h": 116,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 0,
+   "b19": 9,
+   "images": [
+    "e04_needle_hour/00.png"
+   ]
+  },
+  {
+   "type": "needle_min",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 15,
+   "h": 176,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 0,
+   "b19": 7,
+   "images": [
+    "e05_needle_min/00.png"
+   ]
+  },
+  {
+   "type": "needle_sec",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 7,
+   "h": 246,
+   "gravity": 0,
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 46,
+   "b19": 3,
+   "images": [
+    "e06_needle_sec/00.png"
+   ]
+  }
+ ]
+}

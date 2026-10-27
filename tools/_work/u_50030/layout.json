@@ -1,0 +1,243 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "source_size": 521884,
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "battery_level",
+   "alpha": true,
+   "x": 45,
+   "y": 41,
+   "w": 376,
+   "h": 380,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_battery_level/00.png",
+    "e02_battery_level/01.png",
+    "e02_battery_level/02.png",
+    "e02_battery_level/03.png",
+    "e02_battery_level/04.png",
+    "e02_battery_level/05.png"
+   ]
+  },
+  {
+   "type": "step_progress",
+   "alpha": true,
+   "x": 24,
+   "y": 20,
+   "w": 418,
+   "h": 422,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 5,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_step_progress/00.png",
+    "e03_step_progress/01.png",
+    "e03_step_progress/02.png",
+    "e03_step_progress/03.png",
+    "e03_step_progress/04.png",
+    "e03_step_progress/05.png",
+    "e03_step_progress/06.png",
+    "e03_step_progress/07.png",
+    "e03_step_progress/08.png",
+    "e03_step_progress/09.png",
+    "e03_step_progress/10.png"
+   ]
+  },
+  {
+   "type": "hour",
+   "alpha": true,
+   "x": 263,
+   "y": 140,
+   "w": 54,
+   "h": 78,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e04_hour/00.png",
+    "e04_hour/01.png",
+    "e04_hour/02.png",
+    "e04_hour/03.png",
+    "e04_hour/04.png",
+    "e04_hour/05.png",
+    "e04_hour/06.png",
+    "e04_hour/07.png",
+    "e04_hour/08.png",
+    "e04_hour/09.png"
+   ]
+  },
+  {
+   "type": "min",
+   "alpha": true,
+   "x": 263,
+   "y": 244,
+   "w": 54,
+   "h": 78,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e05_min/00.png",
+    "e05_min/01.png",
+    "e05_min/02.png",
+    "e05_min/03.png",
+    "e05_min/04.png",
+    "e05_min/05.png",
+    "e05_min/06.png",
+    "e05_min/07.png",
+    "e05_min/08.png",
+    "e05_min/09.png"
+   ]
+  },
+  {
+   "type": "distance",
+   "alpha": true,
+   "x": 157,
+   "y": 163,
+   "w": 16,
+   "h": 22,
+   "gravity": 10,
+   "gravity_desc": "x_center|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e06_distance/00.png",
+    "e06_distance/01.png",
+    "e06_distance/02.png",
+    "e06_distance/03.png",
+    "e06_distance/04.png",
+    "e06_distance/05.png",
+    "e06_distance/06.png",
+    "e06_distance/07.png",
+    "e06_distance/08.png",
+    "e06_distance/09.png",
+    "e06_distance/10.png"
+   ]
+  },
+  {
+   "type": "step",
+   "alpha": true,
+   "x": 155,
+   "y": 251,
+   "w": 18,
+   "h": 24,
+   "gravity": 10,
+   "gravity_desc": "x_center|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e07_step/00.png",
+    "e07_step/01.png",
+    "e07_step/02.png",
+    "e07_step/03.png",
+    "e07_step/04.png",
+    "e07_step/05.png",
+    "e07_step/06.png",
+    "e07_step/07.png",
+    "e07_step/08.png",
+    "e07_step/09.png"
+   ]
+  },
+  {
+   "type": "heart",
+   "alpha": true,
+   "x": 155,
+   "y": 333,
+   "w": 18,
+   "h": 24,
+   "gravity": 10,
+   "gravity_desc": "x_center|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e08_heart/00.png",
+    "e08_heart/01.png",
+    "e08_heart/02.png",
+    "e08_heart/03.png",
+    "e08_heart/04.png",
+    "e08_heart/05.png",
+    "e08_heart/06.png",
+    "e08_heart/07.png",
+    "e08_heart/08.png",
+    "e08_heart/09.png"
+   ]
+  },
+  {
+   "type": "ampm",
+   "alpha": true,
+   "x": 370,
+   "y": 224,
+   "w": 32,
+   "h": 16,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e09_ampm/00.png",
+    "e09_ampm/01.png"
+   ]
+  }
+ ]
+}

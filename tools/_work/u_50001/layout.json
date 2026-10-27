@@ -1,0 +1,99 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "source_size": 343980,
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 4,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "needle_hour",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 22,
+   "h": 115,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 0,
+   "b19": 11,
+   "images": [
+    "e02_needle_hour/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  },
+  {
+   "type": "needle_min",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 22,
+   "h": 172,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 0,
+   "b19": 11,
+   "images": [
+    "e03_needle_min/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  },
+  {
+   "type": "needle_sec",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 20,
+   "h": 214,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 29,
+   "b19": 10,
+   "images": [
+    "e04_needle_sec/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  }
+ ]
+}

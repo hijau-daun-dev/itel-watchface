@@ -1,0 +1,228 @@
+{
+ "format": "sma-jl-am05",
+ "version": 2,
+ "screen": [
+  466,
+  466
+ ],
+ "source_size": 329916,
+ "elements": [
+  {
+   "type": "preview",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 280,
+   "h": 280,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e00_preview/00.png"
+   ]
+  },
+  {
+   "type": "background",
+   "alpha": false,
+   "x": 0,
+   "y": 0,
+   "w": 466,
+   "h": 466,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e01_background/00.png"
+   ]
+  },
+  {
+   "type": "month",
+   "alpha": false,
+   "x": 177,
+   "y": 121,
+   "w": 66,
+   "h": 22,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e02_month/00.png",
+    "e02_month/01.png",
+    "e02_month/02.png",
+    "e02_month/03.png",
+    "e02_month/04.png",
+    "e02_month/05.png",
+    "e02_month/06.png",
+    "e02_month/07.png",
+    "e02_month/08.png",
+    "e02_month/09.png",
+    "e02_month/10.png",
+    "e02_month/11.png"
+   ]
+  },
+  {
+   "type": "day",
+   "alpha": true,
+   "x": 254,
+   "y": 121,
+   "w": 16,
+   "h": 22,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e03_day/00.png",
+    "e03_day/01.png",
+    "e03_day/02.png",
+    "e03_day/03.png",
+    "e03_day/04.png",
+    "e03_day/05.png",
+    "e03_day/06.png",
+    "e03_day/07.png",
+    "e03_day/08.png",
+    "e03_day/09.png"
+   ]
+  },
+  {
+   "type": "calorie",
+   "alpha": true,
+   "x": 108,
+   "y": 211,
+   "w": 16,
+   "h": 20,
+   "gravity": 10,
+   "gravity_desc": "x_center|y_top",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e04_calorie/00.png",
+    "e04_calorie/01.png",
+    "e04_calorie/02.png",
+    "e04_calorie/03.png",
+    "e04_calorie/04.png",
+    "e04_calorie/05.png",
+    "e04_calorie/06.png",
+    "e04_calorie/07.png",
+    "e04_calorie/08.png",
+    "e04_calorie/09.png"
+   ]
+  },
+  {
+   "type": "step",
+   "alpha": true,
+   "x": 362,
+   "y": 211,
+   "w": 16,
+   "h": 20,
+   "gravity": 10,
+   "gravity_desc": "x_center|y_top",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e05_step/00.png",
+    "e05_step/01.png",
+    "e05_step/02.png",
+    "e05_step/03.png",
+    "e05_step/04.png",
+    "e05_step/05.png",
+    "e05_step/06.png",
+    "e05_step/07.png",
+    "e05_step/08.png",
+    "e05_step/09.png"
+   ]
+  },
+  {
+   "type": "weekday",
+   "alpha": false,
+   "x": 155,
+   "y": 266,
+   "w": 156,
+   "h": 156,
+   "gravity": 9,
+   "gravity_desc": "x_left|y_top",
+   "mode": 6,
+   "encoding": "rle",
+   "b18": 0,
+   "b19": 0,
+   "images": [
+    "e06_weekday/00.png",
+    "e06_weekday/01.png",
+    "e06_weekday/02.png",
+    "e06_weekday/03.png",
+    "e06_weekday/04.png",
+    "e06_weekday/05.png",
+    "e06_weekday/06.png"
+   ]
+  },
+  {
+   "type": "needle_hour",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 38,
+   "h": 172,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 16,
+   "b19": 19,
+   "images": [
+    "e07_needle_hour/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  },
+  {
+   "type": "needle_min",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 32,
+   "h": 184,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 16,
+   "b19": 16,
+   "images": [
+    "e08_needle_min/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  },
+  {
+   "type": "needle_sec",
+   "alpha": true,
+   "x": 233,
+   "y": 233,
+   "w": 32,
+   "h": 242,
+   "gravity": 0,
+   "gravity_desc": "none",
+   "mode": 0,
+   "encoding": "raw",
+   "b18": 38,
+   "b19": 16,
+   "images": [
+    "e09_needle_sec/00.png"
+   ],
+   "note": "b18=pivot distance from image bottom, b19=pivot x inside image; x,y=screen pivot"
+  }
+ ]
+}
